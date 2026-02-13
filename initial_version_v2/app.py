@@ -47,12 +47,6 @@ footer { visibility: hidden !important; }
 /* 상단 여백 튜닝(배포 환경에서 위가 뜨는 느낌 줄이기) */
 div.block-container { padding-top: 1.1rem !important; }
 
-/* 입력창 톤 보정 */
-div[data-baseweb="input"] input {
-  background: rgba(255,255,255,0.06) !important;
-  color: #fafafa !important;
-}
-
 /* ===== 카카오 스타일 GNB 완벽 재현 ===== */
 .tt-nav {
   display: flex;
