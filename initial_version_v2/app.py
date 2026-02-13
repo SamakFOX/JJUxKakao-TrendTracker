@@ -44,13 +44,6 @@ header[data-testid="stHeader"] { display: none !important; }
 #MainMenu { visibility: hidden !important; }
 footer { visibility: hidden !important; }
 
-/* ===== 전체 배경 다크 고정 ===== */
-:root, body, .stApp {
-  background-color: #0e1117 !important;
-  color: #fafafa !important;
-}
-section.main > div { background-color: #0e1117 !important; }
-
 /* 상단 여백 튜닝(배포 환경에서 위가 뜨는 느낌 줄이기) */
 div.block-container { padding-top: 1.1rem !important; }
 
@@ -86,39 +79,6 @@ div[data-baseweb="input"] input {
   display: flex;
   gap: 48px; /* 메뉴 간 촘촘한 간격 */
   align-items: center;
-}
-
-/* ⚠️ 버튼의 모든 테두리와 상자를 강제로 제거하는 강력한 리셋 */
-.tt-menu-btn button {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  color: rgba(255,255,255,0.7) !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  min-height: auto !important;
-  height: auto !important;
-  line-height: inherit !important;
-  transition: color 0.2s ease !important;
-}
-
-/* Streamlit 내부 div 박스들 제거 */
-.tt-menu-btn div, .tt-menu-btn span, .tt-menu-btn p {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  width: auto !important;
-}
-
-.tt-menu-btn button:hover {
-  color: #ffffff !important;
-  text-decoration: underline !important;
-  text-underline-offset: 8px;
 }
 </style>
 """,
