@@ -15,6 +15,15 @@ class Settings:
         self.CSV_PATH = os.getenv("CSV_PATH")
         self.GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
         self.SEARCH_DOMAINS = os.getenv("SEARCH_DOMAINS", "")
+        self.YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+
+        # 도메인 카테고리 프리셋 (Phase 9 추가)
+        self.DOMAIN_CATEGORIES = {
+            "국내 종합": ["chosun.com", "joongang.co.kr", "donga.com", "hani.co.kr", "khan.co.kr"],
+            "방송/통신": ["yna.co.kr", "newsis.com", "ytn.co.kr", "sbs.co.kr", "kbs.co.kr", "mbc.co.kr"],
+            "경제": ["hankyung.com", "mk.co.kr", "sedaily.com", "biz.chosun.com", "moneytoday.co.kr"],
+            "IT/테크": ["zdnet.co.kr", "etnews.com", "techm.kr", "bloter.net", "ddaily.co.kr"]
+        }
         
         # 필수 환경 변수 확인
         self._validate()

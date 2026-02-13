@@ -21,13 +21,16 @@ class SearchResult:
     keyword: str                 # 검색 키워드
     articles: List[NewsArticle]  # 뉴스 기사 리스트
     ai_summary: str              # AI 요약 결과
+    related_keywords: List[str] = field(default_factory=list) # Phase 9: 연관 키워드
 
     def to_dataframe(self) -> pd.DataFrame:
         """
         검색 결과를 CSV 저장을 위해 Long format(기사 1건=1행)으로 변환합니다.
-        8개 컬럼: search_key, search_time, keyword, article_index, title, url, snippet, ai_summary
+        9개 컬럼: search_key, search_time, keyword, article_index, title, url, snippet, ai_summary, related_keywords
         """
         data = []
+        rel_keywords_str = "|".join(self.related_keywords)
+        
         for i, article in enumerate(self.articles, 1):
             data.append({
                 "search_key": self.search_key,
@@ -37,7 +40,8 @@ class SearchResult:
                 "title": article.title,
                 "url": article.url,
                 "snippet": article.snippet,
-                "ai_summary": self.ai_summary
+                "ai_summary": self.ai_summary,
+                "related_keywords": rel_keywords_str
             })
         
         # 기사가 없는 경우에도 레코드는 남기기 위해 기본 정보만 추가
@@ -50,7 +54,8 @@ class SearchResult:
                 "title": "",
                 "url": "",
                 "snippet": "",
-                "ai_summary": self.ai_summary
+                "ai_summary": self.ai_summary,
+                "related_keywords": rel_keywords_str
             })
             
         return pd.DataFrame(data)

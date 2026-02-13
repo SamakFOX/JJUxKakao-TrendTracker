@@ -23,7 +23,7 @@ class SearchRepository:
         self.csv_path = csv_path
         self.columns = [
             "search_key", "search_time", "keyword", "article_index",
-            "title", "url", "snippet", "ai_summary"
+            "title", "url", "snippet", "ai_summary", "related_keywords"
         ]
         # data/ 폴더가 없으면 자동 생성
         os.makedirs(os.path.dirname(self.csv_path), exist_ok=True)
@@ -108,12 +108,17 @@ class SearchRepository:
         except:
             search_time = datetime.now()
             
+        # 연관 키워드 복원
+        rel_keywords_raw = str(first_row["related_keywords"]) if pd.notna(first_row.get("related_keywords")) else ""
+        related_keywords = [k.strip() for k in rel_keywords_raw.split("|") if k.strip()]
+
         return SearchResult(
             search_key=str(first_row["search_key"]),
             search_time=search_time,
             keyword=str(first_row["keyword"]),
             articles=articles,
-            ai_summary=str(first_row["ai_summary"]) if pd.notna(first_row["ai_summary"]) else ""
+            ai_summary=str(first_row["ai_summary"]) if pd.notna(first_row["ai_summary"]) else "",
+            related_keywords=related_keywords
         )
 
     def get_all_as_csv(self) -> str:
@@ -124,3 +129,31 @@ class SearchRepository:
         if df.empty:
             return ""
         return df.to_csv(index=False, encoding='utf-8-sig')
+
+    def get_trending_keywords(self, hours: int = 24, limit: int = 10) -> List[str]:
+        """
+        최근 hours 시간 기준 keyword count를 집계하여 상위 리스트를 반환합니다.
+        """
+        df = self.load()
+        if df.empty:
+            return []
+            
+        try:
+            # search_time을 datetime으로 변환
+            df['search_time'] = pd.to_datetime(df['search_time'])
+            
+            # 최근 N시간 이내의 데이터 필터링
+            now = datetime.now()
+            threshold = now - pd.Timedelta(hours=hours)
+            recent_df = df[df['search_time'] >= threshold]
+            
+            if recent_df.empty:
+                return []
+                
+            # 키워드별 중복 제거 (search_key 기준 1회만 카운트하여 키워드 노출 빈도 측정)
+            keyword_counts = recent_df[['search_key', 'keyword']].drop_duplicates()['keyword'].value_counts()
+            
+            return keyword_counts.head(limit).index.tolist()
+        except Exception as e:
+            print(f"[경고] 인기 검색어 집계 실패: {e}")
+            return []

@@ -36,3 +36,22 @@ def render_news_list(articles: List[NewsArticle]):
                 st.markdown(f"[🔗 기사 원문 보기]({article.url})")
             else:
                 st.write("(URL 정보 없음)")
+
+def render_related_keywords(keywords: List[str]):
+    """
+    연관 키워드를 가로 가변 버튼 리스트로 렌더링합니다.
+    """
+    if not keywords:
+        return
+        
+    st.subheader("🔁 연관 키워드")
+    
+    # 5개씩 끊어서 출력
+    rows = [keywords[i:i + 5] for i in range(0, len(keywords), 5)]
+    for row_idx, row in enumerate(rows):
+        cols = st.columns(len(row))
+        for i, keyword in enumerate(row):
+            if cols[i].button(keyword, key=f"related_{row_idx}_{i}_{keyword}", width="stretch"):
+                # 클릭 시 검색어로 예약하고 화면 갱신
+                st.session_state.pending_keyword = keyword
+                st.rerun()
